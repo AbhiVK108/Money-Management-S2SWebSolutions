@@ -1,0 +1,23 @@
+import 'package:flutter/material.dart';
+
+import 'package:get/get.dart';
+
+import '../controllers/business_controller.dart';
+
+class BusinessView extends GetView<BusinessController> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('BusinessView'),
+        centerTitle: true,
+      ),
+      body: Center(
+        child: Text(
+          'BusinessView is working',
+          style: TextStyle(fontSize: 20),
+        ),
+      ),
+    );
+  }
+}
