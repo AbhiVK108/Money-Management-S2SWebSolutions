@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-class LoansController extends GetxController {
+class CharityController extends GetxController {
 // Observable list for recently added items
   var recentlyAdded = <Map<String, dynamic>>[].obs;
 

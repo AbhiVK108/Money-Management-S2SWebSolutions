@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
-   // Observable list for recently added items
+  // Observable list for recently added items
   var recentlyAdded = <Map<String, dynamic>>[].obs;
 
   // Method to add a new item
@@ -18,9 +18,14 @@ class HomeController extends GetxController {
   // Tabs
   var selectedTab = 0.obs; // 0 = Personal, 1 = Business
 
+  void resetIndex() {
+    selectedTab.value = 0;
+  }
+
   @override
   void onInit() {
     super.onInit();
+    resetIndex();
     _loadData();
   }
 
@@ -29,6 +34,5 @@ class HomeController extends GetxController {
     totalIncome.value = 1500.0;
     totalExpenses.value = 500.0;
     totalSavings.value = totalIncome.value - totalExpenses.value;
-
   }
 }

@@ -1,32 +1,45 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
+
 import 'package:get/get.dart';
 import 'package:glassmorphism/glassmorphism.dart';
 import 'package:lottie/lottie.dart';
 import 'package:money_management/app/core/themes/app_colors.dart';
 import 'package:money_management/app/core/themes/app_textstyles.dart';
-import 'package:money_management/app/routes/app_pages.dart';
-import '../controllers/home_controller.dart';
+import 'package:money_management/app/core/utils/sub_actionsheet.dart';
 
-class HomeView extends GetView<HomeController> {
-  const HomeView({super.key});
+import '../controllers/charity_controller.dart';
 
+class CharityView extends GetView<CharityController> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.tealColor,
-        toolbarHeight: 10,
-      ),
-      backgroundColor: AppColors.backgroundColor, // Ensure it's not white
-      resizeToAvoidBottomInset: true,
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          double heightFactor = constraints.maxHeight / 812; // Base height
-          double widthFactor = constraints.maxWidth / 375; // Base width
-
-          return SafeArea(
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final heightFactor = constraints.maxHeight / 812; // base height
+        final widthFactor = constraints.maxWidth / 375; // base width
+        return Scaffold(
+          appBar: AppBar(
+            // automaticallyImplyLeading: true,
+            leading: GestureDetector(
+              onTap: () {
+                Get.back();
+              },
+              child: Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+            ),
+            title: Text(
+              'Charity-Tracking',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                  color: Colors.white, fontWeight: FontWeight.w600),
+            ),
+            backgroundColor: AppColors.tealColor,
+            // toolbarHeight: 10,
+          ),
+          backgroundColor: AppColors.backgroundColor, // Ensure it's not white
+          resizeToAvoidBottomInset: true,
+          body: SafeArea(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -46,34 +59,24 @@ class HomeView extends GetView<HomeController> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             // Available Balance Section
-                            Row(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 8.0 * heightFactor,
-                                    horizontal: 18.0 * widthFactor,
+
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(top: 12.0 * heightFactor),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text('Available Balance',
+                                      style: AppTextStyles.availableBalance),
+                                  Obx(
+                                    () => Text(
+                                        '\₹${controller.availableBalance.value.toStringAsFixed(2)}',
+                                        style: AppTextStyles.balanceAmount),
                                   ),
-                                  child: CircleAvatar(
-                                    radius: 25.0 * widthFactor,
-                                    backgroundImage:
-                                        AssetImage('assets/man.png'),
-                                  ),
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Available Balance',
-                                        style: AppTextStyles.availableBalance),
-                                    Obx(
-                                      () => Text(
-                                          '\₹${controller.availableBalance.value.toStringAsFixed(2)}',
-                                          style: AppTextStyles.balanceAmount),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                            SizedBox(height: 14 * heightFactor),
+                            SizedBox(height: 20 * heightFactor),
                             // Income and Expenses Cards
                             Padding(
                               padding: EdgeInsets.symmetric(
@@ -108,11 +111,11 @@ class HomeView extends GetView<HomeController> {
                   ),
                 ),
                 SizedBox(height: 20 * heightFactor),
-                // Tabs Section
-                _buildTabs(context, heightFactor, widthFactor),
-                SizedBox(
-                  height: 20 * heightFactor,
-                ),
+                // // Tabs Section
+                // _buildTabs(context, heightFactor, widthFactor),
+                // SizedBox(
+                //   height: 20 * heightFactor,
+                // ),
 
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 22 * widthFactor),
@@ -121,9 +124,8 @@ class HomeView extends GetView<HomeController> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "Recent Records", // Section Title
+                        "Charity Records", // Section Title
                         style: TextStyle(
-                          fontFamily: 'Poppins',
                           fontSize:
                               20 * heightFactor, // You can adjust the font size
                           fontWeight: FontWeight.bold,
@@ -159,7 +161,7 @@ class HomeView extends GetView<HomeController> {
                                     Text(
                                       'No Data Available',
                                       style: TextStyle(
-                                          fontFamily: 'Poppins',
+                                        fontFamily: 'Poppins',
                                           fontSize: 16.0,
                                           fontWeight: FontWeight.w400,
                                           color: Colors.black87),
@@ -176,48 +178,48 @@ class HomeView extends GetView<HomeController> {
                 ),
               ],
             ),
-          );
-        },
-      ),
-      // floatingActionButton: Container(
-      //   height: 55, // Adjust height as needed
-      //   width: 55, // Adjust width as needed
-      //   decoration: BoxDecoration(
-      //     gradient: LinearGradient(
-      //       colors: [
-      //         AppColors.tealColor,
-      //         AppColors.tealColor.withOpacity(0.8),
-      //       ],
-      //       begin: Alignment.topLeft,
-      //       end: Alignment.bottomRight,
-      //     ),
-      //     border: Border.all(
-      //       color: Colors.transparent,
-      //       width: 1.5,
-      //     ),
-      //     borderRadius: BorderRadius.circular(30), // Circular for FAB look
-      //     boxShadow: [
-      //       BoxShadow(
-      //         color: AppColors.tealColor.withOpacity(0.4),
-      //         blurRadius: 8,
-      //         offset: Offset(0, 3),
-      //       ),
-      //     ],
-      //   ),
-      //   child: FloatingActionButton(
-      //     onPressed: () {
-      //       AddItemDashboard.showFullScreenBottomSheet(
-      //           context: context,
-      //           onAddItem: (newItem) {
-      //             controller.addNewItem(newItem);
-      //           });
-      //     },
-      //     backgroundColor:
-      //         Colors.transparent, // Makes the FAB blend with container
-      //     elevation: 0, // Removes FAB shadow since decoration handles it
-      //     child: Icon(Icons.add, color: Colors.white),
-      //   ),
-      // ),
+          ),
+          floatingActionButton: Container(
+            height: 55, // Adjust height as needed
+            width: 55, // Adjust width as needed
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  AppColors.tealColor,
+                  AppColors.tealColor.withOpacity(0.8),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              border: Border.all(
+                color: Colors.transparent,
+                width: 1.5,
+              ),
+              borderRadius: BorderRadius.circular(30), // Circular for FAB look
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.tealColor.withOpacity(0.4),
+                  blurRadius: 8,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
+            child: FloatingActionButton(
+              onPressed: () {
+                AddItemNonDashboard.showFullScreenBottomSheet(
+                    context: context,
+                    onAddItem: (newItem) {
+                      controller.addNewItem(newItem);
+                    });
+              },
+              backgroundColor:
+                  Colors.transparent, // Makes the FAB blend with container
+              elevation: 0, // Removes FAB shadow since decoration handles it
+              child: Icon(Icons.add, color: Colors.white),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -282,124 +284,6 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
-  Widget _buildTabs(
-      BuildContext context, double heightFactor, double widthFactor) {
-    return Obx(
-      () => Container(
-        margin: EdgeInsets.symmetric(horizontal: 14 * widthFactor),
-        padding: EdgeInsets.all(4 * heightFactor),
-        // decoration: BoxDecoration(
-        //   color: AppColors.backgroundColor,
-        //   borderRadius: BorderRadius.circular(12),
-        //   boxShadow: [
-        //     BoxShadow(
-        //       color: Colors.grey.withOpacity(0.2),
-        //       blurRadius: 8,
-        //       offset: const Offset(0, 4),
-        //     ),
-        //   ],
-        // ),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                _buildTabButton('Personal', 0, heightFactor, widthFactor),
-                SizedBox(
-                  width: 8 * widthFactor,
-                ),
-                _buildTabButton('Business', 1, heightFactor, widthFactor),
-              ],
-            ),
-            SizedBox(height: 9 * heightFactor), // Spacer between rows
-            Row(
-              children: [
-                _buildTabButton('Loans', 2, heightFactor, widthFactor),
-                SizedBox(
-                  width: 8 * widthFactor,
-                ),
-                _buildTabButton('Saving', 3, heightFactor, widthFactor),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTabButton(
-      String label, int index, double heightFactor, double widthFactor) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: () {
-          controller.selectedTab.value = index;
-          if (controller.selectedTab.value == 0) {
-            Get.toNamed(Routes.PERSONAL);
-          } else if (controller.selectedTab.value == 1) {
-            Get.toNamed(Routes.BUSINESS);
-            controller.resetIndex();
-          } else if (controller.selectedTab.value == 2) {
-            Get.toNamed(Routes.LOANS);
-            controller.resetIndex();
-          } else if (controller.selectedTab.value == 3) {
-            Get.toNamed(Routes.SAVINGS);
-            controller.resetIndex();
-          } else {
-            Get.toNamed(Routes.HOME);
-            controller.resetIndex();
-          }
-        },
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 2 * widthFactor),
-          padding: EdgeInsets.symmetric(vertical: 12 * heightFactor),
-          decoration: BoxDecoration(
-            gradient: controller.selectedTab.value == index
-                ? LinearGradient(
-                    colors: [
-                      AppColors.tealColor,
-                      AppColors.tealColor.withOpacity(0.8)
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  )
-                : null,
-            color: controller.selectedTab.value == index
-                ? null
-                : Colors.grey.shade200,
-            border: Border.all(
-              color: controller.selectedTab.value == index
-                  ? Colors.transparent
-                  : AppColors.tealColor.withOpacity(0.5),
-              width: 1.5,
-            ),
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: controller.selectedTab.value == index
-                ? [
-                    BoxShadow(
-                      color: AppColors.tealColor.withOpacity(0.4),
-                      blurRadius: 8,
-                      offset: const Offset(0, 3),
-                    ),
-                  ]
-                : null,
-          ),
-          child: Center(
-            child: Text(
-              label,
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 14 * heightFactor,
-                fontWeight: FontWeight.w500,
-                color: controller.selectedTab.value == index
-                    ? Colors.white
-                    : AppColors.primaryTextColor,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
   // Recently added items list
   Widget _buildRecentlyAddedList(double heightFactor, double widthFactor) {
     return Obx(() {
@@ -422,7 +306,7 @@ class HomeView extends GetView<HomeController> {
             case 'Savings':
               categoryColor = Colors.blue;
               break;
-            case 'Loans':
+            case 'Charity':
               categoryColor = Colors.purple;
               break;
             default:
@@ -500,14 +384,14 @@ class HomeView extends GetView<HomeController> {
                                       color: Colors.black87,
                                     ),
                                   ),
-                                  // Main category (Business/Personal)
-                                  Text(
-                                    item['mainCategory'],
-                                    style: TextStyle(
-                                      fontSize: 14 * heightFactor,
-                                      color: Colors.black54,
-                                    ),
-                                  ),
+                                  // // Main category (Business/Personal)
+                                  // Text(
+                                  //   item['mainCategory'],
+                                  //   style: TextStyle(
+                                  //     fontSize: 14 * heightFactor,
+                                  //     color: Colors.black54,
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ],

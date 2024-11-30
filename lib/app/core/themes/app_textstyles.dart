@@ -1,34 +1,52 @@
 import 'package:flutter/material.dart';
 
 class AppTextStyles {
-  static const TextStyle whiteSmall = TextStyle(
+  static const TextStyle availableBalance = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 16.0,
+    fontWeight: FontWeight.w400,
     color: Colors.white,
-    fontSize: 16,
-    fontWeight: FontWeight.w500,
   );
 
-  static const TextStyle whiteLargeBold = TextStyle(
-    color: Colors.white,
-    fontSize: 20,
+  static const TextStyle balanceAmount = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 20.0,
     fontWeight: FontWeight.bold,
-  );
-
-  static const TextStyle whiteMedium = TextStyle(
     color: Colors.white,
+  );
+
+  static const TextStyle financeCardTitle = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 15.0,
     fontWeight: FontWeight.w500,
+    color: Colors.black87,
   );
 
-  static const TextStyle tealButton = TextStyle(
-    fontWeight: FontWeight.w600,
-  );
-
-  static const TextStyle financeTitle = TextStyle(
-    fontSize: 14,
-    fontWeight: FontWeight.w600,
-  );
-
-  static const TextStyle financeValue = TextStyle(
-    fontSize: 16,
+  static const TextStyle financeCardValue = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 15.0,
     fontWeight: FontWeight.bold,
+    color: Colors.black,
+  );
+
+  static const TextStyle recentRecordsHeader = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 20.0,
+    fontWeight: FontWeight.bold,
+    color: Colors.teal,
+  );
+
+  static const TextStyle noDataText = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 16.0,
+    fontWeight: FontWeight.w400,
+    color: Colors.black87,
+  );
+
+  static const TextStyle headerTextStyle = TextStyle(
+    fontFamily: 'Poppins',
+    fontSize: 22.0,
+    fontWeight: FontWeight.bold,
+    color: Colors.black87,
   );
 }
