@@ -49,4 +49,7 @@ class AppTextStyles {
     fontWeight: FontWeight.bold,
     color: Colors.black87,
   );
+
+  // Login Page Styles
+  
 }

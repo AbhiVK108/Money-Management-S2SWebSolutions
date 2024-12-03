@@ -45,7 +45,6 @@ class HomeView extends GetView<HomeController> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            // Available Balance Section
                             Row(
                               children: [
                                 Padding(
@@ -150,7 +149,6 @@ class HomeView extends GetView<HomeController> {
                             ? Center(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  // mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Lottie.asset(
                                         'assets/No-Data-Animation.json',
@@ -179,45 +177,18 @@ class HomeView extends GetView<HomeController> {
           );
         },
       ),
-      // floatingActionButton: Container(
-      //   height: 55, // Adjust height as needed
-      //   width: 55, // Adjust width as needed
-      //   decoration: BoxDecoration(
-      //     gradient: LinearGradient(
-      //       colors: [
-      //         AppColors.tealColor,
-      //         AppColors.tealColor.withOpacity(0.8),
-      //       ],
-      //       begin: Alignment.topLeft,
-      //       end: Alignment.bottomRight,
-      //     ),
-      //     border: Border.all(
-      //       color: Colors.transparent,
-      //       width: 1.5,
-      //     ),
-      //     borderRadius: BorderRadius.circular(30), // Circular for FAB look
-      //     boxShadow: [
-      //       BoxShadow(
-      //         color: AppColors.tealColor.withOpacity(0.4),
-      //         blurRadius: 8,
-      //         offset: Offset(0, 3),
-      //       ),
-      //     ],
-      //   ),
-      //   child: FloatingActionButton(
-      //     onPressed: () {
-      //       AddItemDashboard.showFullScreenBottomSheet(
-      //           context: context,
-      //           onAddItem: (newItem) {
-      //             controller.addNewItem(newItem);
-      //           });
-      //     },
-      //     backgroundColor:
-      //         Colors.transparent, // Makes the FAB blend with container
-      //     elevation: 0, // Removes FAB shadow since decoration handles it
-      //     child: Icon(Icons.add, color: Colors.white),
-      //   ),
-      // ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Get.toNamed(Routes.PIE_CHARTS);
+        },
+        backgroundColor: Colors.teal, // Set the background color to teal
+        foregroundColor: Colors.white, // Set the icon color to white
+        child: Image.asset(
+          'assets/stats.png',
+          height: 22,
+          width: 22,
+        ),
+      ),
     );
   }
 
@@ -288,17 +259,6 @@ class HomeView extends GetView<HomeController> {
       () => Container(
         margin: EdgeInsets.symmetric(horizontal: 14 * widthFactor),
         padding: EdgeInsets.all(4 * heightFactor),
-        // decoration: BoxDecoration(
-        //   color: AppColors.backgroundColor,
-        //   borderRadius: BorderRadius.circular(12),
-        //   boxShadow: [
-        //     BoxShadow(
-        //       color: Colors.grey.withOpacity(0.2),
-        //       blurRadius: 8,
-        //       offset: const Offset(0, 4),
-        //     ),
-        //   ],
-        // ),
         child: Column(
           children: [
             Row(
@@ -317,7 +277,7 @@ class HomeView extends GetView<HomeController> {
                 SizedBox(
                   width: 8 * widthFactor,
                 ),
-                _buildTabButton('Saving', 3, heightFactor, widthFactor),
+                _buildTabButton('Fixed Deposit', 3, heightFactor, widthFactor),
               ],
             ),
           ],
@@ -341,7 +301,7 @@ class HomeView extends GetView<HomeController> {
             Get.toNamed(Routes.LOANS);
             controller.resetIndex();
           } else if (controller.selectedTab.value == 3) {
-            Get.toNamed(Routes.SAVINGS);
+            Get.toNamed(Routes.FIXED_DEPOSIT);
             controller.resetIndex();
           } else {
             Get.toNamed(Routes.HOME);
@@ -574,5 +534,23 @@ class HomeView extends GetView<HomeController> {
         },
       );
     });
+  }
+
+  // pie chart
+
+  // Function to return a color for each section
+  Color _getColorForSection(String key) {
+    switch (key) {
+      case 'Personal':
+        return Colors.blue;
+      case 'Business':
+        return Colors.green;
+      case 'Savings':
+        return Colors.orange;
+      case 'Loans':
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
   }
 }

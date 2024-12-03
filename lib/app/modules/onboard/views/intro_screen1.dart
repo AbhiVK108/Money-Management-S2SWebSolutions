@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:money_management/app/core/themes/app_colors.dart';
 import 'package:money_management/app/modules/onboard/controllers/onboard_controller.dart';
 
 class IntroScreen1 extends GetView<OnboardController> {
@@ -59,14 +58,15 @@ class IntroScreen1 extends GetView<OnboardController> {
                         SizedBox(height: 16.0 * heightFactor),
                         Padding(
                           padding: EdgeInsets.symmetric(
-                              horizontal: 12.0 * widthFactor),
+                              horizontal: 20.0 * widthFactor),
                           child: Text(
                             'Welcome to MoneyManager. Your ultimate tool to manage and grow your money effectively.',
-                            textAlign: TextAlign.center,
+                            textAlign: TextAlign.justify,
                             style: TextStyle(
                               fontFamily: 'Poppins',
                               fontSize: 16.0 * widthFactor,
                               fontWeight: FontWeight.w400,
+                              fontStyle: FontStyle.italic,
                               color: Colors.teal.shade700,
                               height: 1.6,
                             ),

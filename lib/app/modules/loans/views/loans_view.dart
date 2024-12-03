@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:money_management/app/core/themes/app_colors.dart';
 import 'package:money_management/app/core/themes/app_textstyles.dart';
+import 'package:money_management/app/core/utils/action_sheet.dart';
 import 'package:money_management/app/core/utils/sub_actionsheet.dart';
 
 import '../controllers/loans_controller.dart';
@@ -68,7 +69,7 @@ class LoansView extends GetView<LoansController> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text('Available Balance',
+                                const  Text('Available Balance',
                                       style: AppTextStyles.availableBalance),
                                   Obx(
                                     () => Text(
@@ -204,7 +205,7 @@ class LoansView extends GetView<LoansController> {
             ),
             child: FloatingActionButton(
               onPressed: () {
-                AddItemNonDashboard.showFullScreenBottomSheet(
+                AddItemLoan.showFullScreenBottomSheet(
                     context: context,
                     onAddItem: (newItem) {
                       controller.addNewItem(newItem);

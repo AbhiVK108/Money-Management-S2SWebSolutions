@@ -28,7 +28,7 @@ class AddItemNonDashboard {
         "Salary",
         "Freelancing",
         "Rental",
-        "Bonuses/Commissions",
+        "Bonuses",
         "Others"
       ],
       "Expense": [
@@ -323,52 +323,51 @@ class AddItemNonDashboard {
       ),
     );
   }
-static Widget _buildFormattedAmountField({
-  required TextEditingController controller,
-  required String label,
-  required double widthFactor,
-}) {
-  return TextField(
-    controller: controller,
-    keyboardType: TextInputType.number,
-    decoration: InputDecoration(
-      labelText: label,
-      border: const OutlineInputBorder(),
-      labelStyle: TextStyle(
-        fontFamily: 'Poppins',
-        color: Colors.black,
-        fontSize: 15 * widthFactor,
-        fontWeight: FontWeight.w300,
+
+  static Widget _buildFormattedAmountField({
+    required TextEditingController controller,
+    required String label,
+    required double widthFactor,
+  }) {
+    return TextField(
+      controller: controller,
+      keyboardType: TextInputType.number,
+      decoration: InputDecoration(
+        labelText: label,
+        border: const OutlineInputBorder(),
+        labelStyle: TextStyle(
+          fontFamily: 'Poppins',
+          color: Colors.black,
+          fontSize: 15 * widthFactor,
+          fontWeight: FontWeight.w300,
+        ),
       ),
-    ),
-    onChanged: (value) {
-      // Remove commas and other formatting to process the raw number
-      final rawValue = value.replaceAll(RegExp(r'[^\d]'), '');
-      final parsedValue = int.tryParse(rawValue);
-      if (parsedValue != null) {
-        final formattedValue = _formatAmount(parsedValue);
-        controller.value = TextEditingValue(
-          text: formattedValue,
-          selection: TextSelection.collapsed(
-            offset: formattedValue.length,
-          ),
-        );
-      }
-    },
-  );
-}
-
-static String _formatAmount(int amount) {
-  if (amount >= 100000 && amount < 10000000) {
-    // Format as Lacs
-    return '${(amount / 100000).toStringAsFixed(2)} L'; 
-  } else if (amount >= 10000000) {
-    // Format as Crores
-    return '${(amount / 10000000).toStringAsFixed(2)} Cr'; 
+      onChanged: (value) {
+        // Remove commas and other formatting to process the raw number
+        final rawValue = value.replaceAll(RegExp(r'[^\d]'), '');
+        final parsedValue = int.tryParse(rawValue);
+        if (parsedValue != null) {
+          final formattedValue = _formatAmount(parsedValue);
+          controller.value = TextEditingValue(
+            text: formattedValue,
+            selection: TextSelection.collapsed(
+              offset: formattedValue.length,
+            ),
+          );
+        }
+      },
+    );
   }
-  // Default formatting with commas
-  return NumberFormat("#,##0").format(amount); 
-}
 
-
+  static String _formatAmount(int amount) {
+    if (amount >= 100000 && amount < 10000000) {
+      // Format as Lacs
+      return '${(amount / 100000).toStringAsFixed(2)} L';
+    } else if (amount >= 10000000) {
+      // Format as Crores
+      return '${(amount / 10000000).toStringAsFixed(2)} Cr';
+    }
+    // Default formatting with commas
+    return NumberFormat("#,##0").format(amount);
+  }
 }

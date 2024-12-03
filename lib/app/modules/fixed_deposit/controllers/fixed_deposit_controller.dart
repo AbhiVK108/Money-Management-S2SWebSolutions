@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
-class SavingsController extends GetxController {
-  //TODO: Implement SavingsController
+class FixedDepositController extends GetxController {
+  //TODO: Implement FixedDepositController
 
   final count = 0.obs;
   @override

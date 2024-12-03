@@ -56,15 +56,20 @@ class IntroScreen3 extends GetView<OnboardController> {
                           ),
                         ),
                         SizedBox(height: 16.0 * heightFactor),
-                        Text(
-                          'Backup your data securely and gain insightful analytics for smarter financial decisions.',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 16.0 * widthFactor,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.teal.shade700,
-                            height: 1.6,
+                        Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 12.0 * widthFactor),
+                          child: Text(
+                            'Backup your data securely and gain insightful analytics for smarter financial decisions.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontStyle: FontStyle.italic,
+                              fontFamily: 'Poppins',
+                              fontSize: 16.0 * widthFactor,
+                              fontWeight: FontWeight.w400,
+                              color: Colors.teal.shade700,
+                              height: 1.6,
+                            ),
                           ),
                         ),
                       ],

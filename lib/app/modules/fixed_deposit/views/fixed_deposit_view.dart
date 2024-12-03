@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-import '../controllers/savings_controller.dart';
+import '../controllers/fixed_deposit_controller.dart';
 
-class SavingsView extends GetView<SavingsController> {
+class FixedDepositView extends GetView<FixedDepositController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('SavingsView'),
+        title: Text('FixedDepositView'),
         centerTitle: true,
       ),
       body: Center(
         child: Text(
-          'SavingsView is working',
+          'FixedDepositView is working',
           style: TextStyle(fontSize: 20),
         ),
       ),

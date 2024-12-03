@@ -1,9 +1,11 @@
 import 'package:get/get.dart';
 
+import 'package:money_management/app/modules/auth/bindings/auth_binding.dart';
+import 'package:money_management/app/modules/auth/views/login.dart';
 import 'package:money_management/app/modules/business/bindings/business_binding.dart';
 import 'package:money_management/app/modules/business/views/business_view.dart';
-import 'package:money_management/app/modules/charity/bindings/charity_binding.dart';
-import 'package:money_management/app/modules/charity/views/charity_view.dart';
+import 'package:money_management/app/modules/fixed_deposit/bindings/fixed_deposit_binding.dart';
+import 'package:money_management/app/modules/fixed_deposit/views/fixed_deposit_view.dart';
 import 'package:money_management/app/modules/home/bindings/home_binding.dart';
 import 'package:money_management/app/modules/home/views/add_entry_view.dart';
 import 'package:money_management/app/modules/home/views/home_view.dart';
@@ -16,15 +18,15 @@ import 'package:money_management/app/modules/onboard/views/intro_screen3.dart';
 import 'package:money_management/app/modules/onboard/views/onboard_view.dart';
 import 'package:money_management/app/modules/personal/bindings/personal_binding.dart';
 import 'package:money_management/app/modules/personal/views/personal_view.dart';
-import 'package:money_management/app/modules/savings/bindings/savings_binding.dart';
-import 'package:money_management/app/modules/savings/views/savings_view.dart';
+import 'package:money_management/app/modules/pie_charts/bindings/pie_charts_binding.dart';
+import 'package:money_management/app/modules/pie_charts/views/pie_charts_view.dart';
 
 part 'app_routes.dart';
 
 class AppPages {
-  AppPages._(); 
+  AppPages._();
 
-  static const INITIAL = Routes.ONBOARD;
+  static const INITIAL = Routes.LOGIN;
 
   static final routes = [
     GetPage(
@@ -53,25 +55,16 @@ class AppPages {
       binding: LoansBinding(),
     ),
     GetPage(
-      name: _Paths.SAVINGS,
-      page: () => SavingsView(),
-      binding: SavingsBinding(),
-    ),
-    GetPage(
-      name: _Paths.CHARITY,
-      page: () => CharityView(),
-      binding: CharityBinding(),
-    ),
-    GetPage(
       name: _Paths.ONBOARD,
       page: () => OnboardView(),
       binding: OnboardBinding(),
     ),
-     GetPage(
+    GetPage(
       name: _Paths.INTRO_1,
       page: () => IntroScreen1(),
       binding: OnboardBinding(),
-    ), GetPage(
+    ),
+    GetPage(
       name: _Paths.INTRO_2,
       page: () => IntroScreen2(),
       binding: OnboardBinding(),
@@ -80,6 +73,21 @@ class AppPages {
       name: _Paths.INTRO_3,
       page: () => IntroScreen3(),
       binding: OnboardBinding(),
+    ),
+    GetPage(
+      name: _Paths.PIE_CHARTS,
+      page: () => PieChartsView(),
+      binding: PieChartsBinding(),
+    ),
+    GetPage(
+      name: _Paths.LOGIN,
+      page: () => LoginPage(),
+      binding: AuthBinding(),
+    ),
+    GetPage(
+      name: _Paths.FIXED_DEPOSIT,
+      page: () => FixedDepositView(),
+      binding: FixedDepositBinding(),
     ),
   ];
 }

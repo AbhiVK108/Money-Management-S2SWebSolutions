@@ -93,38 +93,21 @@ class OnboardView extends GetView<OnboardController> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.tealColor,
                               padding: EdgeInsets.symmetric(
-                                vertical: 10.0 * heightFactor,
-                                horizontal: 18.0 * widthFactor,
+                                vertical: 7.0 * heightFactor,
+                                horizontal: 20.0 * widthFactor,
                               ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12.0),
                               ),
                             ),
-                            child: Row(
-                              children: [
-                                Text(
-                                  currentPage == 2 ? 'Start' : 'Next',
-                                  style: TextStyle(
-                                    color: AppColors.whiteColor,
-                                    fontFamily: 'Poppins',
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 17.0 * widthFactor,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 6.0 * widthFactor,
-                                ),
-                                currentPage == 2
-                                    ? Icon(
-                                        Icons.arrow_forward_outlined,
-                                        color: AppColors.whiteColor,
-                                      )
-                                    : Icon(
-                                        Icons.arrow_right,
-                                        color: Colors.transparent,
-                                        size: 0.0,
-                                      )
-                              ],
+                            child: Text(
+                              currentPage == 2 ? 'Start' : 'Next',
+                              style: TextStyle(
+                                color: AppColors.whiteColor,
+                                fontFamily: 'Poppins',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 17.0 * widthFactor,
+                              ),
                             ),
                           ),
                         ],

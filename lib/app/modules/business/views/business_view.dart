@@ -36,8 +36,6 @@ class BusinessView extends GetView<BusinessController> {
                   color: Colors.white,
                   fontWeight: FontWeight.w600),
             ),
-            backgroundColor: AppColors.tealColor,
-            // toolbarHeight: 10,
           ),
           backgroundColor: AppColors.backgroundColor, // Ensure it's not white
           resizeToAvoidBottomInset: true,
@@ -286,7 +284,7 @@ class BusinessView extends GetView<BusinessController> {
       return ListView.builder(
         itemCount: controller.recentlyAdded.length,
         shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
+        // physics: const NeverScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           final item = controller.recentlyAdded[index];
 
