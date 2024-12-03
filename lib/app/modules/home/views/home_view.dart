@@ -1,17 +1,24 @@
+// ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 import 'package:lottie/lottie.dart';
 import 'package:money_management/app/core/themes/app_colors.dart';
 import 'package:money_management/app/core/themes/app_textstyles.dart';
-import 'package:money_management/app/core/utils/action_sheet.dart';
+import 'package:money_management/app/routes/app_pages.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
-  bool _animate = true;
+  const HomeView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.tealColor,
+        toolbarHeight: 10,
+      ),
       backgroundColor: AppColors.backgroundColor, // Ensure it's not white
       resizeToAvoidBottomInset: true,
       body: LayoutBuilder(
@@ -24,21 +31,20 @@ class HomeView extends GetView<HomeController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ClipRRect(
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     bottomLeft: Radius.circular(25.0),
                     bottomRight: Radius.circular(25.0),
                   ),
                   child: Container(
-                    height: 217 * heightFactor,
+                    height: 220 * heightFactor,
                     width: double.infinity,
                     color: AppColors.tealColor,
                     child: Padding(
-                      padding: EdgeInsets.only(top: 8.0 * heightFactor),
+                      padding: EdgeInsets.only(top: 2.0 * heightFactor),
                       child: SingleChildScrollView(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            // Available Balance Section
                             Row(
                               children: [
                                 Padding(
@@ -55,20 +61,12 @@ class HomeView extends GetView<HomeController> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      'Available Balance',
-                                      style: AppTextStyles.whiteSmall.copyWith(
-                                        fontSize: 16 * heightFactor,
-                                      ),
-                                    ),
+                                    Text('Available Balance',
+                                        style: AppTextStyles.availableBalance),
                                     Obx(
                                       () => Text(
-                                        '\₹${controller.availableBalance.value.toStringAsFixed(2)}',
-                                        style: AppTextStyles.whiteLargeBold
-                                            .copyWith(
-                                          fontSize: 20 * heightFactor,
-                                        ),
-                                      ),
+                                          '\₹${controller.availableBalance.value.toStringAsFixed(2)}',
+                                          style: AppTextStyles.balanceAmount),
                                     ),
                                   ],
                                 ),
@@ -124,6 +122,7 @@ class HomeView extends GetView<HomeController> {
                       Text(
                         "Recent Records", // Section Title
                         style: TextStyle(
+                          fontFamily: 'Poppins',
                           fontSize:
                               20 * heightFactor, // You can adjust the font size
                           fontWeight: FontWeight.bold,
@@ -150,7 +149,6 @@ class HomeView extends GetView<HomeController> {
                             ? Center(
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  // mainAxisSize: MainAxisSize.min,
                                   children: [
                                     Lottie.asset(
                                         'assets/No-Data-Animation.json',
@@ -159,6 +157,7 @@ class HomeView extends GetView<HomeController> {
                                     Text(
                                       'No Data Available',
                                       style: TextStyle(
+                                          fontFamily: 'Poppins',
                                           fontSize: 16.0,
                                           fontWeight: FontWeight.w400,
                                           color: Colors.black87),
@@ -178,44 +177,16 @@ class HomeView extends GetView<HomeController> {
           );
         },
       ),
-      floatingActionButton: Container(
-        height: 55, // Adjust height as needed
-        width: 55, // Adjust width as needed
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              AppColors.tealColor,
-              AppColors.tealColor.withOpacity(0.8),
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          border: Border.all(
-            color: Colors.transparent,
-            width: 1.5,
-          ),
-          borderRadius: BorderRadius.circular(30), // Circular for FAB look
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.tealColor.withOpacity(0.4),
-              blurRadius: 8,
-              offset: Offset(0, 3),
-            ),
-          ],
-        ),
-        child: FloatingActionButton(
-          onPressed: () {
-            AddItem.showFullScreenBottomSheet(
-              context: context,
-              onAddItem: (newItem) {
-                controller.addNewItem(newItem);
-              },
-            );
-          },
-          backgroundColor:
-              Colors.transparent, // Makes the FAB blend with container
-          elevation: 0, // Removes FAB shadow since decoration handles it
-          child: Icon(Icons.add, color: Colors.white),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Get.toNamed(Routes.PIE_CHARTS);
+        },
+        backgroundColor: Colors.teal, // Set the background color to teal
+        foregroundColor: Colors.white, // Set the icon color to white
+        child: Image.asset(
+          'assets/stats.png',
+          height: 22,
+          width: 22,
         ),
       ),
     );
@@ -252,6 +223,7 @@ class HomeView extends GetView<HomeController> {
             Text(
               title,
               style: TextStyle(
+                fontFamily: 'Poppins',
                 fontSize: 15 * widthFactor,
                 fontWeight: FontWeight.w500,
                 color: AppColors.primaryTextColor,
@@ -268,6 +240,7 @@ class HomeView extends GetView<HomeController> {
               () => Text(
                 '\₹${value.value.toStringAsFixed(2)}',
                 style: TextStyle(
+                  fontFamily: 'Poppins',
                   fontSize: 15 * widthFactor,
                   fontWeight: FontWeight.bold,
                   color: color,
@@ -286,36 +259,25 @@ class HomeView extends GetView<HomeController> {
       () => Container(
         margin: EdgeInsets.symmetric(horizontal: 14 * widthFactor),
         padding: EdgeInsets.all(4 * heightFactor),
-        // decoration: BoxDecoration(
-        //   color: AppColors.backgroundColor,
-        //   borderRadius: BorderRadius.circular(12),
-        //   boxShadow: [
-        //     BoxShadow(
-        //       color: Colors.grey.withOpacity(0.2),
-        //       blurRadius: 8,
-        //       offset: const Offset(0, 4),
-        //     ),
-        //   ],
-        // ),
         child: Column(
           children: [
             Row(
               children: [
-                _buildTabButton('All', 0, heightFactor, widthFactor),
+                _buildTabButton('Personal', 0, heightFactor, widthFactor),
                 SizedBox(
                   width: 8 * widthFactor,
                 ),
-                _buildTabButton('Personal', 1, heightFactor, widthFactor),
+                _buildTabButton('Business', 1, heightFactor, widthFactor),
               ],
             ),
             SizedBox(height: 9 * heightFactor), // Spacer between rows
             Row(
               children: [
-                _buildTabButton('Business', 2, heightFactor, widthFactor),
+                _buildTabButton('Loans', 2, heightFactor, widthFactor),
                 SizedBox(
                   width: 8 * widthFactor,
                 ),
-                _buildTabButton('Charity', 3, heightFactor, widthFactor),
+                _buildTabButton('Fixed Deposit', 3, heightFactor, widthFactor),
               ],
             ),
           ],
@@ -330,6 +292,21 @@ class HomeView extends GetView<HomeController> {
       child: GestureDetector(
         onTap: () {
           controller.selectedTab.value = index;
+          if (controller.selectedTab.value == 0) {
+            Get.toNamed(Routes.PERSONAL);
+          } else if (controller.selectedTab.value == 1) {
+            Get.toNamed(Routes.BUSINESS);
+            controller.resetIndex();
+          } else if (controller.selectedTab.value == 2) {
+            Get.toNamed(Routes.LOANS);
+            controller.resetIndex();
+          } else if (controller.selectedTab.value == 3) {
+            Get.toNamed(Routes.FIXED_DEPOSIT);
+            controller.resetIndex();
+          } else {
+            Get.toNamed(Routes.HOME);
+            controller.resetIndex();
+          }
         },
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: 2 * widthFactor),
@@ -347,7 +324,7 @@ class HomeView extends GetView<HomeController> {
                 : null,
             color: controller.selectedTab.value == index
                 ? null
-                : AppColors.backgroundColor,
+                : Colors.grey.shade200,
             border: Border.all(
               color: controller.selectedTab.value == index
                   ? Colors.transparent
@@ -369,8 +346,9 @@ class HomeView extends GetView<HomeController> {
             child: Text(
               label,
               style: TextStyle(
+                fontFamily: 'Poppins',
                 fontSize: 14 * heightFactor,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w500,
                 color: controller.selectedTab.value == index
                     ? Colors.white
                     : AppColors.primaryTextColor,
@@ -392,87 +370,187 @@ class HomeView extends GetView<HomeController> {
         itemBuilder: (context, index) {
           final item = controller.recentlyAdded[index];
 
+          // Determine the color based on the category
           Color categoryColor;
-          if (item['category'] == 'Income') {
-            categoryColor = Colors.green;
-          } else if (item['category'] == 'Expenses') {
-            categoryColor = Colors.red;
-          } else if (item['category'] == 'Loans') {
-            categoryColor = Colors.orange;
-          } else if (item['category'] == 'Savings') {
-            categoryColor = Colors.blue;
-          } else {
-            categoryColor = Colors.grey;
+          switch (item['subCategory']) {
+            case 'Income':
+              categoryColor = Colors.green;
+              break;
+            case 'Expenses':
+              categoryColor = Colors.red;
+              break;
+            case 'Savings':
+              categoryColor = Colors.blue;
+              break;
+            case 'Loans':
+              categoryColor = Colors.purple;
+              break;
+            default:
+              categoryColor = Colors.grey;
           }
 
-          return Container(
-            margin: EdgeInsets.symmetric(
-              horizontal: 16 * widthFactor,
-              vertical: 8 * heightFactor,
-            ),
-            padding: EdgeInsets.all(12 * heightFactor),
-            decoration: BoxDecoration(
-              color: AppColors.backgroundColor,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.white),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.white.withOpacity(0.9),
-                  blurRadius: 8,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
-            child: Row(
-              children: [
-                // Icon with dynamic color
-                CircleAvatar(
-                  radius: 22 * widthFactor,
-                  backgroundColor: categoryColor.withOpacity(0.2),
-                  child: Icon(
-                    Icons.category, // Replace with relevant icons if needed
-                    size: 20 * heightFactor,
-                    color: categoryColor,
+          return GestureDetector(
+            onTap: () {
+              // Add your navigation or action here
+            },
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              margin: EdgeInsets.symmetric(
+                horizontal: 16 * widthFactor,
+                vertical: 8 * heightFactor,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade200,
+                    blurRadius: 10,
+                    offset: const Offset(0, 6),
                   ),
+                ],
+              ),
+              child: GlassmorphicContainer(
+                width: double.infinity,
+                height: 160 * heightFactor,
+                borderRadius: 16,
+                blur: 20,
+                alignment: Alignment.bottomCenter,
+                border: 1,
+                linearGradient: LinearGradient(
+                  colors: [
+                    Colors.grey.shade300,
+                    Colors.white.withOpacity(0.2),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-                SizedBox(width: 12 * widthFactor),
-                // Details
-                Expanded(
+                borderGradient: LinearGradient(
+                  colors: [Colors.white.withOpacity(0.5), Colors.grey.shade200],
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(16 * widthFactor),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        item['category'],
-                        style: TextStyle(
-                          fontSize: 16 * heightFactor,
-                          fontWeight: FontWeight.bold,
+                      // Row for Icon, Category, and Amount
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 24 * widthFactor,
+                                backgroundColor: categoryColor.withOpacity(0.2),
+                                child: Icon(
+                                  Icons.category,
+                                  size: 20 * heightFactor,
+                                  color: categoryColor,
+                                ),
+                              ),
+                              SizedBox(width: 12 * widthFactor),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Subcategory (Income, Expenses, etc.)
+                                  Text(
+                                    item['subCategory'],
+                                    style: TextStyle(
+                                      fontSize: 16 * heightFactor,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                  // Main category (Business/Personal)
+                                  Text(
+                                    item['mainCategory'],
+                                    style: TextStyle(
+                                      fontSize: 14 * heightFactor,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          // Amount
+                          Text(
+                            "\₹${item['amount'].toStringAsFixed(2)}",
+                            style: TextStyle(
+                              fontSize: 16 * heightFactor,
+                              fontWeight: FontWeight.bold,
+                              color: categoryColor,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 8 * heightFactor),
+                      // Row for Date and Source
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8.0 * widthFactor),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // Date
+                            Text(
+                              item['date'],
+                              style: TextStyle(
+                                fontSize: 12 * heightFactor,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            // Source
+                            Text(
+                              "Source: ${item['source']}",
+                              style: TextStyle(
+                                fontSize: 12 * heightFactor,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      SizedBox(height: 4 * heightFactor),
-                      Text(
-                        item['date'],
-                        style: TextStyle(
-                          fontSize: 12 * heightFactor,
-                          color: Colors.grey,
+                      SizedBox(height: 8 * heightFactor),
+                      // Description
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8.0 * widthFactor),
+                        child: Text(
+                          item['description'],
+                          style: TextStyle(
+                            fontSize: 14 * heightFactor,
+                            color: Colors.black54,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
-                // Amount
-                Text(
-                  "\₹${item['amount'].toStringAsFixed(2)}",
-                  style: TextStyle(
-                    fontSize: 16 * heightFactor,
-                    fontWeight: FontWeight.bold,
-                    color: categoryColor,
-                  ),
-                ),
-              ],
+              ),
             ),
           );
         },
       );
     });
+  }
+
+  // pie chart
+
+  // Function to return a color for each section
+  Color _getColorForSection(String key) {
+    switch (key) {
+      case 'Personal':
+        return Colors.blue;
+      case 'Business':
+        return Colors.green;
+      case 'Savings':
+        return Colors.orange;
+      case 'Loans':
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
   }
 }

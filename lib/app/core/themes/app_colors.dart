@@ -9,4 +9,7 @@ class AppColors {
   static const Color savingsColor = Color(0xFF2196F3);
   static const Color blueColor = Colors.blue;
   static Color tealColor = Colors.teal.shade500;
+  static const introCardsColor = Color(0xffE0E0E0);
+  static const whiteColor = Color(0xffffffff);
+
 }

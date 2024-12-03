@@ -1,136 +1,272 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:glassmorphism/glassmorphism.dart';
+import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
+import 'package:money_management/app/core/themes/app_colors.dart';
+import 'package:money_management/app/core/themes/app_textstyles.dart';
+import 'package:money_management/app/core/utils/sub_actionsheet.dart';
+import 'package:money_management/app/modules/personal/controllers/personal_controller.dart';
 
-class PersonalView extends GetView {
+class PersonalView extends GetView<PersonalController> {
+  const PersonalView({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.teal,
-        title: Text(
-          'Personal Finance',
-          style: GoogleFonts.poppins(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        centerTitle: true,
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-        ),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header Section
-              _buildSummaryCards(),
-              const SizedBox(height: 20),
-              // Income and Expense Breakdown
-              Text(
-                'Category Breakdown',
-                style: GoogleFonts.poppins(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.teal,
-                ),
+    return LayoutBuilder(
+      builder: (BuildContext context, BoxConstraints constraints) {
+        final heightFactor = constraints.maxHeight / 812; // base height
+        final widthFactor = constraints.maxWidth / 375; // base width
+        return Scaffold(
+          appBar: AppBar(
+            leading: GestureDetector(
+              onTap: () {
+                Get.back();
+              },
+              child: Icon(
+                Icons.arrow_back,
+                color: Colors.white,
               ),
-              const SizedBox(height: 10),
-              _buildCategoryBreakdown(),
-              const SizedBox(height: 20),
-              // Add Income/Expense Button
-              Center(
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    Fluttertoast.showToast(
-                      msg: "Add Income/Expense",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      backgroundColor: Colors.teal,
-                      textColor: Colors.white,
-                      fontSize: 16.0,
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.teal,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                      horizontal: 20,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+            ),
+            title: Text(
+              'Personal-Tracking',
+              style: TextStyle(
+                  fontFamily: 'Poppins',
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600),
+            ),
+            backgroundColor: AppColors.tealColor,
+          ),
+          backgroundColor: AppColors.backgroundColor,
+          resizeToAvoidBottomInset: true,
+          body: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(25.0),
+                    bottomRight: Radius.circular(25.0),
+                  ),
+                  child: Container(
+                    height: 220 * heightFactor,
+                    width: double.infinity,
+                    color: AppColors.tealColor,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 2.0 * heightFactor),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(top: 12.0 * heightFactor),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text('Available Balance',
+                                      style: AppTextStyles.availableBalance),
+                                  Obx(
+                                    () => Text(
+                                        '\₹${controller.availableBalance.value.toStringAsFixed(2)}', // Use .value
+                                        style: AppTextStyles.balanceAmount),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 20 * heightFactor),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8.0 * widthFactor),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  _buildFinanceCard(
+                                    title: 'Income',
+                                    value: controller.totalIncome, // Use .value
+                                    color: Colors.green,
+                                    graphImagePath: 'assets/chart-up.png',
+                                    widthFactor: widthFactor,
+                                    heightFactor: heightFactor,
+                                  ),
+                                  _buildFinanceCard(
+                                    title: 'Expenses',
+                                    value:
+                                        controller.totalExpenses, // Use .value
+                                    color: Colors.red,
+                                    graphImagePath: 'assets/chart-down.png',
+                                    widthFactor: widthFactor,
+                                    heightFactor: heightFactor,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                  icon: const Icon(Icons.add),
-                  label: Text(
-                    'Add Income/Expense',
-                    style: GoogleFonts.poppins(fontSize: 16),
+                ),
+                SizedBox(height: 20 * heightFactor),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 22 * widthFactor),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Personal Records",
+                        style: TextStyle(
+                          fontSize: 20 * heightFactor,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.tealColor,
+                        ),
+                      ),
+                      Image.asset(
+                        'assets/history.png',
+                        height: 23 * heightFactor,
+                        width: 23 * widthFactor,
+                      )
+                    ],
                   ),
                 ),
-              ),
-            ],
+                SizedBox(
+                  height: 8 * heightFactor,
+                ),
+                Expanded(
+                  child: Obx(() {
+                    return SizedBox(
+                        height: constraints.maxHeight * 0.7,
+                        child: controller.recentlyAdded.isEmpty
+                            ? Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Lottie.asset(
+                                        'assets/No-Data-Animation.json',
+                                        height: 120 * heightFactor,
+                                        width: 120 * widthFactor),
+                                    Text(
+                                      'No Data Available',
+                                      style: TextStyle(
+                                          fontFamily: 'Poppins',
+                                          fontSize: 16.0,
+                                          fontWeight: FontWeight.w400,
+                                          color: Colors.black87),
+                                    ),
+                                    SizedBox(
+                                      height: 30.0 * heightFactor,
+                                    )
+                                  ],
+                                ),
+                              )
+                            : _buildRecentlyAddedList(
+                                heightFactor, widthFactor));
+                  }),
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSummaryCards() {
-    return GridView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3, // Number of columns
-        crossAxisSpacing: 10.0,
-        mainAxisSpacing: 10.0,
-        childAspectRatio: 1, // Adjust the aspect ratio for card sizes
-      ),
-      itemCount: 3,
-      itemBuilder: (BuildContext context, int index) {
-        if (index == 0) {
-          return _buildSummaryCard('Income', '\$10,000', Colors.teal);
-        } else if (index == 1) {
-          return _buildSummaryCard('Expenses', '\$5,000', Colors.redAccent);
-        } else {
-          return _buildSummaryCard('Savings', '\$3,000', Colors.green);
-        }
+          floatingActionButton: Container(
+            height: 55,
+            width: 55,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  AppColors.tealColor,
+                  AppColors.tealColor.withOpacity(0.8),
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              border: Border.all(
+                color: Colors.transparent,
+                width: 1.5,
+              ),
+              borderRadius: BorderRadius.circular(30),
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.tealColor.withOpacity(0.4),
+                  blurRadius: 8,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
+            child: FloatingActionButton(
+              onPressed: () {
+                AddItemNonDashboard.showFullScreenBottomSheet(
+                    context: context,
+                    onAddItem: (newItem) {
+                      controller.addNewItem(newItem);
+                    });
+              },
+              backgroundColor:
+                  Colors.transparent, // Makes the FAB blend with container
+              elevation: 0,
+              child: Icon(Icons.add, color: Colors.white),
+            ),
+          ),
+        );
       },
     );
   }
 
-  Widget _buildSummaryCard(String title, String amount, Color color) {
-    return Card(
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      color: color.withOpacity(0.1),
+  Widget _buildFinanceCard({
+    required String title,
+    required RxDouble value,
+    required Color color,
+    required String graphImagePath,
+    required double widthFactor,
+    required double heightFactor,
+  }) {
+    return Expanded(
       child: Container(
-        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.backgroundColor.withOpacity(0.9),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.grey.shade200, width: 2.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 8,
+              blurStyle: BlurStyle.outer,
+              spreadRadius: 2,
+            ),
+          ],
+        ),
+        padding: EdgeInsets.all(6.0 * widthFactor),
+        margin: EdgeInsets.symmetric(horizontal: 5 * widthFactor),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               title,
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: color,
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 15 * widthFactor,
+                fontWeight: FontWeight.w500,
+                color: AppColors.primaryTextColor,
               ),
             ),
-            const SizedBox(height: 10),
-            Text(
-              amount,
-              style: GoogleFonts.poppins(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
+            SizedBox(height: 2 * heightFactor),
+            Image.asset(
+              graphImagePath,
+              height: 40 * heightFactor,
+              color: color,
+            ),
+            SizedBox(height: 2 * heightFactor),
+            Obx(
+              () => Text(
+                '\₹${value.value.toStringAsFixed(2)}',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 15 * widthFactor,
+                  fontWeight: FontWeight.bold,
+                  color: color,
+                ),
               ),
             ),
           ],
@@ -139,202 +275,204 @@ class PersonalView extends GetView {
     );
   }
 
-  Widget _buildCategoryBreakdown() {
-    return Column(
-      children: [
-        _buildCategoryTile('Groceries', 300, Colors.orange),
-        _buildCategoryTile('Rent', 800, Colors.red),
-        _buildCategoryTile('Entertainment', 150, Colors.blue),
-        _buildCategoryTile('Utilities', 200, Colors.green),
-      ],
-    );
-  }
+  // Recently added items list
 
-  Widget _buildCategoryTile(String category, int amount, Color color) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: color.withOpacity(0.2),
-        child: Icon(
-          Icons.category,
-          color: color,
-        ),
-      ),
-      title: Text(
-        category,
-        style: GoogleFonts.poppins(fontWeight: FontWeight.w600),
-      ),
-      trailing: Text(
-        '\$$amount',
-        style: GoogleFonts.poppins(
-          fontWeight: FontWeight.bold,
-          color: Colors.black87,
-        ),
-      ),
-    );
-  }
-}
+  Widget _buildRecentlyAddedList(double heightFactor, double widthFactor) {
+    return Obx(() {
+      return ListView.builder(
+        itemCount: controller.recentlyAdded.length,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          final item = controller.recentlyAdded[index];
 
-              
-// card design category
+          // Determine the color based on the category
+          Color categoryColor;
+          IconData categoryIcon;
+          switch (item['subCategory']) {
+            case 'Income':
+              categoryColor = AppColors.incomeColor;
+              categoryIcon = Icons.arrow_circle_up;
+              break;
+            case 'Expense':
+              categoryColor = AppColors.expenseColor;
+              categoryIcon = Icons.arrow_circle_down;
+              break;
+            default:
+              categoryColor = Colors.grey;
+              categoryIcon = Icons.help_outline;
+          }
 
-  Widget _buildPersonalFinanceSection() {
-    final List<Map<String, dynamic>> categories = [
-      {'title': 'Loans', 'icon': Icons.money_rounded, 'color': Colors.teal},
-      {'title': 'Savings', 'icon': Icons.savings_rounded, 'color': Colors.teal},
-      {
-        'title': 'Insurance',
-        'icon': Icons.policy_rounded,
-        'color': Colors.teal
-      },
-      {
-        'title': 'Investments',
-        'icon': Icons.pie_chart_rounded,
-        'color': Colors.teal
-      },
-      {
-        'title': 'Budgeting',
-        'icon': Icons.account_balance_wallet_rounded,
-        'color': Colors.teal
-      },
-      {
-        'title': 'Expenses',
-        'icon': Icons.receipt_long_rounded,
-        'color': Colors.teal
-      },
-    ];
-    Widget _buildCategoryTile({
-      required String title,
-      required IconData icon,
-      required Color color,
-    }) {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(12.0),
-        child: Container(
-          color: Colors.grey.withOpacity(0.4),
-          child: InkWell(
+          return GestureDetector(
             onTap: () {
               // Add your navigation or action here
             },
-            borderRadius: BorderRadius.circular(12),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircleAvatar(
-                  backgroundColor: color.withOpacity(0.2),
-                  radius: 30,
-                  child: Icon(icon, color: color, size: 28),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  title,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.teal,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Financial Summary Section
-          Card(
-            elevation: 4,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Column(
-                    children: [
-                      Text('Total Income',
-                          style: TextStyle(
-                              color: Colors.teal, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 8),
-                      Text('\$10,000',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600)),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Text('Total Expenses',
-                          style: TextStyle(
-                              color: Colors.red, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 8),
-                      Text('\$7,500',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600)),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      Text('Balance',
-                          style: TextStyle(
-                              color: Colors.green,
-                              fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 8),
-                      Text('\$2,500',
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600)),
-                    ],
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              margin: EdgeInsets.symmetric(
+                horizontal: 16 * widthFactor,
+                vertical: 8 * heightFactor,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.shade200,
+                    blurRadius: 10,
+                    offset: const Offset(0, 6),
                   ),
                 ],
               ),
-            ),
-          ),
-          const SizedBox(height: 20),
-          // Section Title
-          // Text(
-          //   'Personal Finance Categories',
-          //   style: TextStyle(
-          //     fontSize: 22,
-          //     fontWeight: FontWeight.bold,
-          //     color: Colors.teal,
-          //   ),
-          // ),
-          // const SizedBox(height: 6),
-          // Divider(color: Colors.teal.withOpacity(0.5), thickness: 1),
-          // const SizedBox(height: 6),
-          // Categories Grid
-          Expanded(
-            child: GridView.builder(
-              physics: const BouncingScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 16.0,
-                mainAxisSpacing: 16.0,
-                childAspectRatio: 1.1,
+              child: GlassmorphicContainer(
+                width: double.infinity,
+                height: 160 * heightFactor,
+                borderRadius: 16,
+                blur: 20,
+                alignment: Alignment.bottomCenter,
+                border: 1,
+                linearGradient: LinearGradient(
+                  colors: [
+                    Colors.grey.shade300,
+                    Colors.white.withOpacity(0.2),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderGradient: LinearGradient(
+                  colors: [Colors.white.withOpacity(0.5), Colors.grey.shade200],
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(16 * widthFactor),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Row for Icon, Category, and Amount
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CircleAvatar(
+                                radius: 24 * widthFactor,
+                                backgroundColor: categoryColor.withOpacity(0.2),
+                                child: Icon(
+                                  Icons.category,
+                                  size: 20 * heightFactor,
+                                  color: categoryColor,
+                                ),
+                              ),
+                              SizedBox(width: 12 * widthFactor),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    item['subCategory'],
+                                    style: TextStyle(
+                                      fontSize: 16 * heightFactor,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                  // Text(
+                                  //   item['source'].toString(),
+                                  //   style: TextStyle(
+                                  //     fontSize: 14 * heightFactor,
+                                  //     color: Colors.black54,
+                                  //   ),
+                                  // ),
+                                ],
+                              ),
+                            ],
+                          ),
+                         Text(
+  "\₹${formatAmount(item['amount'])}",
+  style: TextStyle(
+    fontSize: 16 * heightFactor,
+    fontWeight: FontWeight.bold,
+    color: categoryColor,
+  ),
+),
+
+
+                        ],
+                      ),
+                      SizedBox(height: 8 * heightFactor),
+                      // Row for Date and Source
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8.0 * widthFactor),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // Date
+                            Text(
+                              item['date'].toString(),
+                              style: TextStyle(
+                                fontSize: 12 * heightFactor,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            // Source
+                            Text(
+                              "Source: ${item['source'].toString()}",
+                              style: TextStyle(
+                                fontSize: 12 * heightFactor,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 8 * heightFactor),
+                      // Description
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 8.0 * widthFactor),
+                        child: Text(
+                          item['description'].toString(),
+                          style: TextStyle(
+                            fontSize: 14 * heightFactor,
+                            color: Colors.black54,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
-              itemCount: categories.length,
-              itemBuilder: (context, index) {
-                final category = categories[index];
-                return _buildCategoryTile(
-                  title: category['title'],
-                  icon: category['icon'],
-                  color: category['color'],
-                );
-              },
             ),
-          ),
-        ],
-      ),
-    );
+          );
+        },
+      );
+    });
   }
+  String formatAmount(String rawAmount) {
+  try {
+    // Remove commas and units
+    final unitRegex = RegExp(r'[^\d.]'); // Matches anything that is not a digit or a dot
+    String cleanedAmount = rawAmount.replaceAll(unitRegex, '');
+    double numericAmount = double.parse(cleanedAmount);
+
+    // Detect unit (e.g., "L", "M", "B") if present
+    String unit = rawAmount.contains('L')
+        ? 'L'
+        : rawAmount.contains('M')
+            ? 'M'
+            : rawAmount.contains('B')
+                ? 'B'
+                : '';
+
+    // Format the numeric part with commas and append the unit
+    return "${NumberFormat("#,##0.00").format(numericAmount)} $unit".trim();
+  } catch (e) {
+    // Return raw amount if parsing fails
+    return rawAmount;
+  }
+}
+
+}

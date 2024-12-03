@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
-class SavingsController extends GetxController {
-  //TODO: Implement SavingsController
+class OnboardController extends GetxController {
+  //TODO: Implement OnboardController
 
   final count = 0.obs;
   @override
